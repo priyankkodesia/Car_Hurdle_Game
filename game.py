@@ -1,12 +1,13 @@
 import pygame
 import time
+import random
+
 pygame.init()
 
 # window size
 
-window_height = 800
+window_height = 650
 window_width  = 600
-
 
 #color definitions
 
@@ -25,6 +26,9 @@ clock  = pygame.time.Clock()
 
 carImg = pygame.image.load('car2.png')
 
+
+def hurdles(hurdle_x,hurdle_y,hurdle_width,hurdle_height,color):
+	pygame.draw.rect(game_window,color,[hurdle_x,hurdle_y,hurdle_width,hurdle_height])
 
 
 def car(x,y):
@@ -51,12 +55,22 @@ def crash():
 	message_display("You crashed")
 
 def game_loop():
+	fps =60
+	score = 0
+	x = (window_height*0.48)
+	y = (window_width * 0.90)
 
-	x = (window_height*0.45)
-	y = (window_width * 0.8)
+	
+	x_change = 0
+
+	hurdle_startx = random.randrange(0,window_width)
+	hurdle_starty = -600
+	hurdle_speed  = 7
+	hurdle_width =60
+	hurdle_height = 60
 
 	gameExit = False
-	x_change = 0
+
 
 	while not gameExit:
 		for event in pygame.event.get():
@@ -78,13 +92,30 @@ def game_loop():
 		x += x_change
 
 		game_window.fill(black)
+
+		hurdles(hurdle_startx,hurdle_starty,hurdle_width,hurdle_height,blue)
+		hurdle_starty += hurdle_speed
+
 		car(x,y)
 
 		if x > window_width - 45 or x < 0:
 			crash()
 
+		if hurdle_starty >  
+		if hurdle_starty > window_height:
+			hurdle_starty = 0 - hurdle_height
+			hurdle_startx = random.randrange(0,window_width-hurdle_width)
+ 			
+ 			score += 10
+			fps+=10
+
 		pygame.display.update()
-		clock.tick(60)
+
+		if fps>250:
+			fps =250
+
+		clock.tick(fps)
+		print(fps)
 
 game_loop()
 pygame.quit()
