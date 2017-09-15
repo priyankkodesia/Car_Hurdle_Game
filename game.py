@@ -35,14 +35,15 @@ def car(x,y):
 	game_window.blit(carImg,(x,y))
 
 
-def text_objects(text,font):
-	textSurface = font.render(text,True,red)
+def text_objects(text,font,color):
+	textSurface = font.render(text,True,color)
 	return textSurface , textSurface.get_rect()
+
 
 
 def message_display(text):
 	largeText = pygame.font.Font('freesansbold.ttf',80)
-	TextSurf,TextRect = text_objects(text,largeText)
+	TextSurf,TextRect = text_objects(text,largeText,red)
 	TextRect.center = ((window_width/2),(window_height/2))
 	game_window.blit(TextSurf,TextRect)
 
@@ -50,6 +51,14 @@ def message_display(text):
 	time.sleep(2)
 	game_loop()
 
+
+def score_display(score_string):
+	scoreText = pygame.font.Font('freesansbold.ttf',28)
+	TextSurf ,TextRect =text_objects(score_string,scoreText,green)
+	TextRect.center = ((window_width-140),(80))
+	game_window.blit(TextSurf,TextRect)
+
+	pygame.display.flip()
 
 def crash():
 	message_display("You crashed")
@@ -64,8 +73,8 @@ def game_loop():
 	x_change = 0
 
 	hurdle_startx = random.randrange(0,window_width)
-	hurdle_starty = -600
-	hurdle_speed  = 7
+	hurdle_starty = -400
+	hurdle_speed  = 5
 	hurdle_width =60
 	hurdle_height = 60
 
@@ -97,16 +106,31 @@ def game_loop():
 		hurdle_starty += hurdle_speed
 
 		car(x,y)
+		score_string = "Score : {}".format(score) 
+		score_display(score_string)
+		
 
 		if x > window_width - 45 or x < 0:
 			crash()
 
-		if hurdle_starty >  
+
+		print("check")
+		print("car at {},{}".format(x,y))
+		print("hurdle at {},{}".format(hurdle_startx,hurdle_starty))
+		if abs(hurdle_startx- x)< hurdle_width and abs(hurdle_starty - y) < hurdle_height:
+			print("crashed")
+			print("crashed at x,y {},{} and hurdx ,hurdy {},{}".format(x,y,hurdle_startx,hurdle_starty))
+			crash()
+
+
+
 		if hurdle_starty > window_height:
 			hurdle_starty = 0 - hurdle_height
 			hurdle_startx = random.randrange(0,window_width-hurdle_width)
- 			
- 			score += 10
+			
+			score += 10
+			
+			
 			fps+=10
 
 		pygame.display.update()
